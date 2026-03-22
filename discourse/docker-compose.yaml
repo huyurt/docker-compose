@@ -1,0 +1,62 @@
+services:
+  postgres:
+    # Discourse now requires pgvector extension, using the official pgvector image
+    image: pgvector/pgvector:pg15
+    container_name: discourse_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: discourse
+      POSTGRES_PASSWORD: discourse_password
+      POSTGRES_DB: discourse
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U discourse -d discourse"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: discourse_redis
+    restart: always
+    volumes:
+      - ./redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  discourse:
+    image: discourse/discourse:latest
+    container_name: discourse_app
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8005:80"
+    environment:
+      DISCOURSE_DB_HOST: postgres
+      DISCOURSE_DB_NAME: discourse
+      DISCOURSE_DB_USER: discourse
+      DISCOURSE_DB_PASSWORD: discourse_password
+      DISCOURSE_REDIS_HOST: redis
+      DISCOURSE_HOSTNAME: localhost
+      DISCOURSE_DEVELOPER_EMAILS: admin@discourse.com
+      UNICORN_BIND_ALL: "true"
+      # SMTP settings (required for account confirmation, but UI will load without them)
+      DISCOURSE_SMTP_ADDRESS: "" 
+      DISCOURSE_SMTP_PORT: 587
+      DISCOURSE_SMTP_USER_NAME: ""
+      DISCOURSE_SMTP_PASSWORD: ""
+      DISCOURSE_SMTP_ENABLE_STARTTLS: "true"
+    volumes:
+      - ./discourse_uploads:/var/www/discourse/public/uploads
+      - ./discourse_backups:/var/www/discourse/public/backups
+      - ./plugins/discourse-follow:/var/www/discourse/plugins/discourse-follow
+      - ./plugins/discourse-zoom:/var/www/discourse/plugins/discourse-zoom
+      - ./plugins/discourse-jira:/var/www/discourse/plugins/discourse-jira
