@@ -2,6 +2,6 @@ version: '1.0'
 services:
   drawdb:
     container_name: drawdb
-    image: xinsodev/drawdb
+    image: ghcr.io/drawdb-io/drawdb:latest
     ports:
       - 3000:80
