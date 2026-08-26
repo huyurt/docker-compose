@@ -36,7 +36,7 @@ Expose your services easily and securely.
 
 Let’s Encrypt will automatically generate the SSL certificate in the background, and anyone accessing the application will be redirected to a secure HTTPS connection.
 
-After configuring the address for the Nginx Proxy Manager UI, you can disable access to port **81** on the server.
+After configuring the address for the Nginx Proxy Manager UI, you can disable access to **port 81** on the server.
 
 
 
