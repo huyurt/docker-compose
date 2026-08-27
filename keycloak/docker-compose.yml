@@ -6,7 +6,7 @@ services:
     environment:
       KC_FEATURES: token-exchange # Enable the token exchange feature.
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres-db:5432/${KEYCLOAK_DB}
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${KEYCLOAK_DB}
       KC_DB_USERNAME: ${KEYCLOAK_DB_USER}
       KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       KEYCLOAK_ADMIN: admin
@@ -23,7 +23,7 @@ services:
       - proxy-network
 
   postgres:
-    container_name: postgres-db
+    container_name: postgres
     image: postgres:18-alpine
     restart: unless-stopped
     environment:
