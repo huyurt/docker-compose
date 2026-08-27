@@ -14,4 +14,4 @@ Website: [https://drawdb.app](https://drawdb.app/)
 
 GitHub: [https://github.com/drawdb-io/drawdb](https://github.com/drawdb-io/drawdb)
 
-Docker Hub (xinsodev): [https://hub.docker.com/r/xinsodev/drawdb](https://hub.docker.com/r/xinsodev/drawdb)
+Docker Hub: [https://hub.docker.com/r/xinsodev/drawdb](https://hub.docker.com/r/xinsodev/drawdb)

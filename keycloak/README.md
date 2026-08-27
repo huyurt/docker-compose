@@ -14,4 +14,4 @@ Website: [https://www.keycloak.org](https://www.keycloak.org/)
 
 GitHub: [https://github.com/keycloak/keycloak](https://github.com/keycloak/keycloak)
 
-Docker Hub (keycloak): [https://quay.io/repository/keycloak/keycloak](https://quay.io/repository/keycloak/keycloak)
+Quay: [https://quay.io/repository/keycloak/keycloak](https://quay.io/repository/keycloak/keycloak)

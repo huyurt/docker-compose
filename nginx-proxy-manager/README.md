@@ -50,4 +50,4 @@ Website: [https://nginxproxymanager.com](https://nginxproxymanager.com/)
 
 GitHub: [https://github.com/NginxProxyManager/nginx-proxy-manager](https://github.com/NginxProxyManager/nginx-proxy-manager)
 
-Docker Hub (jc21): [https://hub.docker.com/r/jc21/nginx-proxy-manager](https://hub.docker.com/r/jc21/nginx-proxy-manager)
+Docker Hub: [https://hub.docker.com/r/jc21/nginx-proxy-manager](https://hub.docker.com/r/jc21/nginx-proxy-manager)
