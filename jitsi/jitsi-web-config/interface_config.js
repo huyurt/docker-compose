@@ -1,0 +1,20 @@
+/* eslint-disable no-unused-vars, no-var */
+var interfaceConfig = {
+    APP_NAME: 'Jitsi Meet',
+    PROVIDER_NAME: 'Yurt',
+    LANG_DETECTION: true,
+    DEFAULT_BACKGROUND: '#474747',
+    DEFAULT_LOCAL_DISPLAY_NAME: 'me',
+    DEFAULT_REMOTE_DISPLAY_NAME: '',
+    SHOW_JITSI_WATERMARK: false,
+    SHOW_WATERMARK_FOR_GUESTS: false,
+    SUPPORT_URL: '',
+    MOBILE_APP_PROMO: false,
+    DISABLE_VIDEO_BACKGROUND: false,
+    INITIAL_TOOLBAR_TIMEOUT: 20000,
+    TOOLBAR_TIMEOUT: 4000,
+    TOOLBAR_ALWAYS_VISIBLE: false,
+    DISABLE_JOIN_LEAVE_NOTIFICATIONS: false,
+    DISABLE_PRESENCE_STATUS: false,
+    DISABLE_RINGING: false
+};

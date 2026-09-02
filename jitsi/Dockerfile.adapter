@@ -1,0 +1,10 @@
+﻿FROM d3473r/jitsi-keycloak:latest
+
+USER root
+
+RUN apk add --no-cache ca-certificates curl
+
+COPY certs/*.crt /usr/local/share/ca-certificates/
+RUN update-ca-certificates
+
+ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt

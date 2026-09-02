@@ -1,0 +1,117 @@
+services:
+  jitsi-keycloak:
+    build:
+      context: .
+      dockerfile: Dockerfile.adapter
+    image: jitsi-keycloak:custom
+    container_name: jitsi_keycloak
+    restart: unless-stopped
+    volumes:
+      - ./config/keycloak.json:/config/keycloak.json
+    environment:
+      JITSI_URL: ${PUBLIC_URL}
+      JITSI_SECRET: ${JWT_APP_SECRET}
+      NODE_ENV: production
+      NODE_EXTRA_CA_CERTS: /etc/ssl/certs/ca-certificates.crt
+    networks:
+      - proxy-network
+
+  jitsi-web:
+    image: jitsi/web:stable
+    container_name: jitsi_web
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: ${PUBLIC_URL}
+      ENABLE_AUTH: ${ENABLE_AUTH}
+      AUTH_TYPE: ${AUTH_TYPE}
+      JWT_APP_ID: ${JWT_APP_ID}
+      JWT_APP_SECRET: ${JWT_APP_SECRET}
+      TOKEN_AUTH_URL: ${KEYCLOAK_ADAPTER_URL}
+      ENABLE_GUESTS: ${ENABLE_GUESTS}
+      ENABLE_AUTO_LOGIN: ${ENABLE_AUTO_LOGIN}
+      JWT_ALLOW_EMPTY: ${JWT_ALLOW_EMPTY}
+      ENABLE_COLIBRI_WEBSOCKET: ${ENABLE_COLIBRI_WEBSOCKET}
+    #volumes:
+    #  - ./jitsi-web-config/interface_config.js:/config/interface_config.js:ro
+    networks:
+      - proxy-network
+    depends_on:
+      - jitsi-prosody
+      - jitsi-keycloak
+
+  jitsi-prosody:
+    image: jitsi/prosody:stable
+    container_name: jitsi_prosody
+    restart: unless-stopped
+    environment:
+      PUBLIC_URL: ${PUBLIC_URL}
+      ENABLE_AUTH: ${ENABLE_AUTH}
+      AUTH_TYPE: ${AUTH_TYPE}
+      PROSODY_AUTH_TYPE: jwt
+      JWT_APP_ID: ${JWT_APP_ID}
+      JWT_APP_SECRET: ${JWT_APP_SECRET}
+      ENABLE_GUESTS: ${ENABLE_GUESTS}
+      JWT_ALLOW_EMPTY: ${JWT_ALLOW_EMPTY}
+      XMPP_DOMAIN: meet.jitsi
+      XMPP_AUTH_DOMAIN: auth.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.meet.jitsi
+      XMPP_GUEST_DOMAIN: guest.meet.jitsi
+      XMPP_SERVER: jitsi-prosody
+      JICOFO_AUTH_USER: ${JICOFO_USER}
+      JICOFO_AUTH_PASSWORD: ${JICOFO_PASSWORD}
+      JVB_AUTH_USER: ${JVB_USER}
+      JVB_AUTH_PASSWORD: ${JVB_PASSWORD}
+    networks:
+      proxy-network:
+        aliases:
+          - xmpp.meet.jitsi
+
+  jitsi-jicofo:
+    image: jitsi/jicofo:stable
+    container_name: jitsi_jicofo
+    restart: unless-stopped
+    environment:
+      XMPP_DOMAIN: meet.jitsi
+      XMPP_AUTH_DOMAIN: auth.meet.jitsi
+      XMPP_MUC_DOMAIN: muc.meet.jitsi
+      XMPP_INTERNAL_MUC_DOMAIN: internal-muc.meet.jitsi
+      XMPP_SERVER: jitsi-prosody
+      JICOFO_AUTH_USER: ${JICOFO_USER}
+      JICOFO_AUTH_PASSWORD: ${JICOFO_PASSWORD}
+      JICOFO_COMPONENT_SECRET: ${JICOFO_COMPONENT_SECRET}
+      ENABLE_AUTH: ${ENABLE_AUTH}
+      AUTH_TYPE: ${AUTH_TYPE}
+      JICOFO_AUTH_TYPE: internal
+      JICOFO_AUTH_LIFETIME: 100
+    networks:
+      - proxy-network
+    depends_on:
+      - jitsi-prosody
+
+  jitsi-jvb:
+    image: jitsi/jvb:stable
+    container_name: jitsi_jvb
+    restart: unless-stopped
+    environment:
+      XMPP_DOMAIN: meet.jitsi
+      XMPP_SERVER: jitsi-prosody
+      DOCKER_HOST_ADDRESS: ${DOCKER_HOST_ADDRESS}
+      ENABLE_COLIBRI_WEBSOCKET: ${ENABLE_COLIBRI_WEBSOCKET}
+      COLIBRI_WEBSOCKET_PORT: 9090
+      UDP_PORT: 10000
+      JVB_AUTH_USER: ${JVB_USER}
+      JVB_AUTH_PASSWORD: ${JVB_PASSWORD}
+      JVB_COMPONENT_SECRET: ${JVB_COMPONENT_SECRET}
+    ports:
+      - "10000:10000/udp"
+    networks:
+      proxy-network:
+        aliases:
+          - jvb
+    depends_on:
+      - jitsi-prosody
+
+networks:
+  proxy-network:
+    external: true

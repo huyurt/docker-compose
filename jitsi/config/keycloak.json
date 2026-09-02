@@ -1,0 +1,8 @@
+{
+  "realm": "<REALM_NAME>",
+  "auth-server-url": "https://<KEYCLOAK.ADDRESS>/",
+  "ssl-required": "external",
+  "resource": "<CLIENT_NAME>",
+  "public-client": true,
+  "confidential-port": 0
+}
