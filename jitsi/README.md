@@ -1,4 +1,4 @@
-# Jitsi + Keycloak
+# Jitsi + Keycloak Adapter
 
 A free open-source video conferencing software for web & mobile.
 
