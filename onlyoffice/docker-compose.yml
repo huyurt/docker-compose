@@ -1,0 +1,43 @@
+services:
+  onlyoffice:
+    image: onlyoffice/documentserver:9.4
+    container_name: onlyoffice
+    restart: unless-stopped
+    environment:
+      JWT_ENABLED: ${JWT_ENABLED}
+      JWT_HEADER: ${JWT_HEADER}
+      JWT_SECRET: ${JWT_SECRET}
+      WOPI_ENABLED: true
+      ADMINPANEL_ENABLED: true
+      ALLOW_META_IP_ADDRESS: true
+      ALLOW_PRIVATE_IP_ADDRESS: true
+      EXAMPLE_ENABLED: true
+      METRICS_ENABLED: true
+      DS_SECURITY_ALLOW_PRIVATE_ADDRESSES: true
+      NGINX_ACCESS_LOG: true
+    volumes:
+      - ./plugins/jitsi:/var/www/onlyoffice/documentserver/sdkjs-plugins/{7645D461-84BC-4FB0-A42C-98118C14A1CD}
+    networks:
+      - proxy-network
+
+  test-app:
+    build: ./test-app
+    container_name: test-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      TEST_APP_HOST: ${TEST_APP_HOST}
+      TEST_APP_PUBLIC_HOST: ${TEST_APP_PUBLIC_HOST:-}
+      ONLYOFFICE_PUBLIC_URL: ${ONLYOFFICE_PUBLIC_URL}
+      JITSI_DOMAIN: ${JITSI_DOMAIN}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./test-app/files:/usr/src/app/files
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    external: true
